@@ -1,0 +1,214 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>YouTube Downloader</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+</head>
+
+<body>
+
+    <main class="page">
+
+        <header class="brand">
+
+            <div class="brand-icon">
+                ↓
+            </div>
+
+            <h1>YouTube Downloader</h1>
+
+            <p>Download videos you are authorized to download.</p>
+
+        </header>
+
+        <section class="card">
+
+            <form id="download-form">
+
+                <div class="form-group">
+
+                    <label for="url">
+                        YouTube video URL
+                    </label>
+
+                    <input
+                        type="url"
+                        id="url"
+                        name="url"
+                        class="url-input"
+                        placeholder="https://www.youtube.com/watch?v=..."
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="quality">
+                        Video quality
+                    </label>
+
+                    <select
+                        id="quality"
+                        name="quality"
+                        class="quality-select"
+                    >
+                        <option value="360">360p</option>
+                        <option value="480">480p</option>
+                        <option value="720">720p</option>
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Save location
+                    </label>
+
+                    <div class="folder-picker">
+
+                        <button
+                            type="button"
+                            id="choose-folder-button"
+                            class="folder-button"
+                        >
+                            Choose folder
+                        </button>
+
+                        <span
+                            id="folder-status"
+                            class="folder-status"
+                        >
+                            No folder selected
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <button
+                    type="submit"
+                    id="start-button"
+                    class="download-button"
+                >
+                    Download video
+                </button>
+
+            </form>
+
+            <div id="download-panel" hidden>
+
+                <div class="message" id="status-message">
+                    Preparing download...
+                </div>
+
+                <div class="progress-container">
+
+                    <div class="progress-header">
+
+                        <span id="progress-status">
+                            Starting...
+                        </span>
+
+                        <span id="progress-percent">
+                            0%
+                        </span>
+
+                    </div>
+
+                    <div class="progress-bar">
+
+                        <div
+                            id="progress-fill"
+                            class="progress-fill"
+                            style="width: 0%;"
+                        ></div>
+
+                    </div>
+
+                    <div class="download-details">
+
+                        <span id="downloaded">
+                            0 B
+                        </span>
+
+                        <span id="speed">
+                            Unknown
+                        </span>
+
+                        <span id="eta">
+                            ETA: Unknown
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="controls">
+
+                    <button
+                        type="button"
+                        id="pause-button"
+                        class="control-button"
+                    >
+                        Pause
+                    </button>
+
+                    <button
+                        type="button"
+                        id="resume-button"
+                        class="control-button"
+                        hidden
+                    >
+                        Resume
+                    </button>
+
+                    <button
+                        type="button"
+                        id="cancel-button"
+                        class="control-button cancel-button"
+                    >
+                        Cancel
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="info">
+
+                <div class="info-icon">
+                    i
+                </div>
+
+                <div>
+                    Downloads are intended for content you have permission
+                    to download. Please respect copyright and applicable
+                    platform terms.
+                </div>
+
+            </div>
+
+        </section>
+
+        <footer class="footer">
+            YouTube Downloader · Personal use
+        </footer>
+
+    </main>
+
+    <script
+        src="{{ url_for('static', filename='js/app.js') }}"
+    ></script>
+
+</body>
+</html>
+
