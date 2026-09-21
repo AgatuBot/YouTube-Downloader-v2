@@ -1,4 +1,4 @@
-﻿document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
 
     const form = document.getElementById("download-form");
     const startButton = document.getElementById("start-button");
@@ -17,6 +17,14 @@
     const pauseButton = document.getElementById("pause-button");
     const resumeButton = document.getElementById("resume-button");
     const cancelButton = document.getElementById("cancel-button");
+
+    const completedDownload = document.getElementById(
+        "completed-download"
+    );
+
+    const downloadFileLink = document.getElementById(
+        "download-file-link"
+    );
 
     const chooseFolderButton = document.getElementById("choose-folder-button");
     const folderStatus = document.getElementById("folder-status");
@@ -177,6 +185,13 @@
                 statusMessage.textContent =
                     "Download completed successfully.";
 
+                if (job.file_path) {
+                    downloadFileLink.href =
+                        `/download/${currentJobId}`;
+
+                    completedDownload.hidden = false;
+                }
+
                 stopPolling();
 
                 startButton.disabled = false;
@@ -267,6 +282,9 @@
         startButton.textContent = "Starting...";
 
         downloadPanel.hidden = false;
+
+        completedDownload.hidden = true;
+        downloadFileLink.href = "#";
 
         progressFill.style.width = "0%";
         progressPercent.textContent = "0%";
@@ -469,8 +487,3 @@
     );
 
 });
-
-
-
-
-

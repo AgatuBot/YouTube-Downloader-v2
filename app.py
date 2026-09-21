@@ -1,7 +1,10 @@
-﻿import tkinter as tk
-from tkinter import filedialog
+import os
 
-from flask import Flask, render_template, request, jsonify
+if os.name == "nt":
+    import tkinter as tk
+    from tkinter import filedialog
+
+from flask import Flask, render_template, request, jsonify, send_file
 from downloader import (
     create_job,
     get_job,
@@ -20,6 +23,9 @@ def home():
 
 @app.route("/choose-folder", methods=["GET"])
 def choose_folder():
+    if os.name != "nt":
+        return jsonify({"folder": "downloads"})
+
     root = tk.Tk()
     root.withdraw()
     root.attributes("-topmost", True)
@@ -42,6 +48,9 @@ def start_download():
     url = data.get("url", "").strip()
     quality = data.get("quality", "360")
     save_folder = data.get("save_folder", "").strip()
+
+    if not save_folder:
+        save_folder = "downloads"
 
     if not url:
         return jsonify({
@@ -70,6 +79,28 @@ def download_status(job_id):
         }), 404
 
     return jsonify(job)
+
+
+@app.route("/download/<job_id>", methods=["GET"])
+def download_file(job_id):
+    job = get_job(job_id)
+
+    if job is None or job.get("status") != "completed":
+        return jsonify({
+            "error": "Download file is not available."
+        }), 404
+
+    file_path = job.get("file_path")
+
+    if not file_path or not os.path.isfile(file_path):
+        return jsonify({
+            "error": "Download file is no longer available."
+        }), 404
+
+    return send_file(
+        file_path,
+        as_attachment=True
+    )
 
 
 @app.route("/pause/<job_id>", methods=["POST"])
@@ -116,7 +147,3 @@ def cancel_download(job_id):
 
 if __name__ == "__main__":
     app.run(debug=False)
-
-
-
-

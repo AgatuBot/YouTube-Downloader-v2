@@ -1,8 +1,11 @@
-﻿import os
+import os
 import threading
 import uuid
 
 import yt_dlp
+
+
+IS_WINDOWS = os.name == "nt"
 
 
 DOWNLOAD_FOLDER = "downloads"
@@ -10,7 +13,7 @@ DOWNLOAD_FOLDER = "downloads"
 FFMPEG_LOCATION = (
     r"C:\Users\ADMIN\Downloads\ffmpeg"
     r"\ffmpeg-9.0.2-essentials_build\bin"
-)
+) if IS_WINDOWS else "ffmpeg"
 
 jobs = {}
 jobs_lock = threading.Lock()
@@ -37,6 +40,7 @@ def create_job(url, quality, save_folder):
         "error": None,
         "cancel_requested": False,
         "pause_requested": False,
+        "file_path": None,
     }
 
     with jobs_lock:
@@ -485,6 +489,7 @@ def _run_download(job_id, resume=False):
             speed="",
             eta="",
             error=None,
+            file_path=final_file,
         )
 
     except DownloadCancelled as exc:
@@ -543,12 +548,3 @@ def _format_bytes(value):
         size /= 1024
 
     return f"{size:.2f} GiB"
-
-
-
-
-
-
-
-
-
