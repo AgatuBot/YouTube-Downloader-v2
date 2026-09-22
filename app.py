@@ -145,5 +145,39 @@ def cancel_download(job_id):
     }), 400
 
 
+from urllib.request import Request, urlopen
+from urllib.error import HTTPError, URLError
+
+@app.route("/youtube-check", methods=["GET"])
+def youtube_check():
+    url = "https://www.youtube.com/watch?v=BaW_jenozKc"
+    try:
+        request = Request(
+            url,
+            headers={"User-Agent": "Mozilla/5.0"}
+        )
+        with urlopen(request, timeout=20) as response:
+            return jsonify({
+                "status": response.status,
+                "message": "YouTube request succeeded."
+            })
+    except HTTPError as error:
+        return jsonify({
+            "status": error.code,
+            "message": "YouTube returned an HTTP error."
+        }), 200
+    except URLError as error:
+        return jsonify({
+            "status": None,
+            "message": "Unable to reach YouTube.",
+            "reason": str(error.reason)
+        }), 200
+    except Exception as error:
+        return jsonify({
+            "status": None,
+            "message": "Unexpected error.",
+            "reason": str(error)
+        }), 200
+
 if __name__ == "__main__":
     app.run(debug=False)
